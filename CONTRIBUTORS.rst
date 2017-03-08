@@ -28,6 +28,7 @@ Reviewers
 -   **Marie Fetiveau**, *Rodeo FX*
 -   **Lucien Fostier**, *Image Engine Design*
 -   **Thomas Hourdel**, *Unity Technologies*
+-   **Anders Langlands**, *Weta Digital*
 -   **Jasmin Patry**, *Sucker Punch*
 -   **Troy James Sobotka**, *Freelancer*
 
