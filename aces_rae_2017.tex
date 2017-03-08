@@ -89,7 +89,7 @@
 \IEEEpeerreviewmaketitle
 
 \section{Introduction}
-The Academy Color Encoding System (ACES) is a set of standardized, open source solutions created by the Academy of Motion Picture Arts and Sciences (AMPAS) Science and Technology Council (SciTech) for color management in the motion picture industry. It aims to simplify the complexity of multiple image capture devices, encoding standards, exhibition formats, and archival practices by providing the open standards for maintaining end-to-end image fidelity in a production workflow.
+The Academy Color Encoding System (ACES) is a set of standardized, open source solutions created by the Academy of Motion Picture Arts and Sciences (AMPAS) Science and Technology Council (SciTech) for color management in the motion picture industry [AmA17]. It aims to simplify the complexity of multiple image capture devices, encoding standards, exhibition formats, and archival practices by providing the open standards for maintaining end-to-end image fidelity in a production workflow.
 
 This document presents a series of talking points which summarize the experience of several image quality experts within the visual effects and interactive entertainment industries. These points highlight issues encountered with the ACES 1.0.x system in both production and research environments. The central themes of these points are to make the ACES system more open to peer-review and academic discourse, more flexible for a wider variety of users, and more robust to current and future implementations of the specification. The following discussion should be regarded as an open letter to AMPAS, the ACES board, and the larger community of ACES users.
 
@@ -101,10 +101,10 @@ This document presents a series of talking points which summarize the experience
 ACES is a far-reaching and influential project. Whether intended or not, the entire Imaging and Digital Content Creation (DCC) industry has taken notice. The open-source nature of the project allows for easy adoption across a broad array of applications and invites users to participate in the discourse around its design. To further support this community, which seeks to take an active part in its design and reinforce trust in its scientific foundation, the ACES system should rigorously keep a public record of its experimentation, analysis, and implementation. In short: Document the process, not just the product. Being an open source project at the confluence of art, engineering, and science, this public record will prove invaluable.
 
 \subsection{CTL Codebase Documentation}
-The current ACES Color Transform Language (CTL) codebase lacks sufficient documentation. While this documentation is inherently difficult due to the need to keep record of both computational and scientific design decisions, it should be maintained to a higher degree of verbosity in both regards. For example, there exist a plethora of constants within the codebase with no explanation given for their choice or derivation. Insight into these constant's values is tremendously useful to the adopting users. Even denoting whether these constants were the result of an artistic or subjective choice (e.g. Segmented Splines parameters) can prove useful and prevent wasted time in speculative reverse engineering. The clear documentation of these constants is vital to the health of the open source initiative.
+The current ACES Color Transform Language (CTL) codebase [AmB17], reference implementation of ACES, lacks sufficient documentation. While this documentation is inherently difficult due to the need to keep record of both computational and scientific design decisions, it should be maintained to a higher degree of verbosity in both regards. For example, there exist a plethora of constants within the codebase with no explanation given for their choice or derivation. Insight into these constant's values is tremendously useful to the adopting users. Even denoting whether these constants were the result of an artistic or subjective choice (e.g. Segmented Splines parameters) can prove useful and prevent wasted time in speculative reverse engineering. The clear documentation of these constants is vital to the health of the open source initiative.
 
 \subsection{CTL Codebase Unit Tests}
-The reference images [Amp17] provided by the Academy are an excellent way to validate end-to-end implementation, but only serve the purpose of large validation arrays and don't provide rigorous introspection of the API and will likely miss edge-cases. CTL currently lacks a public unit tests suite, which will hinder the community's ability to participate in its development. Discussions with Alex Forsythe (2016) [For16] have shown that there is an existing private Matlab unit tests suite. A public unit tests suite with continuous online integration that expresses the required behavior of the various functions is highly preferable considering the open source context of the codebase. Coincidentally, the ACES OpenColorIO configurations are implicitly tied to the CTL codebase, thus there is a keen interest in checking its state against the CTL codebase master branch whenever it gets updated.
+The reference images [AmC17] provided by the Academy are an excellent way to validate end-to-end implementation, but only serve the purpose of large validation arrays and don't provide rigorous introspection of the API and will likely miss edge-cases. CTL currently lacks a public unit tests suite, which will hinder the community's ability to participate in its development. Discussions with Alex Forsythe (2016) [For16] have shown that there is an existing private Matlab unit tests suite. A public unit tests suite with continuous online integration that expresses the required behavior of the various functions is highly preferable considering the open source context of the codebase. Coincidentally, the ACES OpenColorIO configurations are implicitly tied to the CTL codebase, thus there is a keen interest in checking its state against the CTL codebase master branch whenever it gets updated.
 
 Please refer to Appendix C: CTL Codebase Unit Tests for a suggested implementation.
 
@@ -170,7 +170,7 @@ Additionally, narrow band light sources present issues in post-production and DI
 \subsection{Metadata}
 Metadata describing the content and context of image data is a crucial piece of any color processing pipeline. ACESclip is designed with that purpose in mind, "to assist in configuring ACES viewing pipelines and to enable portability of ACES transforms in production." [Amp14] The adoption of ACESclip has been very limited due largely to the file format not being widely advertised. However, without proper implementation of this standard there is no canonical way of knowing which ACES component versions were used on a given project. This deficiency breaks the canonical archival pipeline due to the authoring context being lost.
 
-The ACESclip file format attempts to achieve many things at the same time which is likely another factor slowing down its adoption. Is it necessary to embed LUTs and ASC CDLs directly into the ACESclip file? If the intent is to avoid data loss, then the ACESclip file itself, being a sidecar, is subject to being lost too. Would it not be safer to embed the ACESclip data directly into the ACES container? For example, Adobe Camera Raw (ACR) uses sidecar XMP files, but can also write the XMP data along with the EXIF data directly in the image header, creating a strong coupling between the metadata and the image container. In that regard, has XMP been considered? The standard is specifically built for "the creation, processing and interchange of standardized and custom metadata for digital documents and data sets." [Wik17] It could also be very advantageous to store DSLR camera metadata into the ACES container (e.g. for the Raw to ACES utility). Adobe is extensively using XMP for this purpose, and a large variety of DCC applications would be able to easily leverage this standard as well.
+The ACESclip file format attempts to achieve many things at the same time which is likely another factor slowing down its adoption. Is it necessary to embed LUTs and ASC CDLs directly into the ACESclip file? If the intent is to avoid data loss, then the ACESclip file itself, being a sidecar, is subject to being lost too. Acknowledging eventual IO performance degradation and metadata conflict between images, would it not be safer to embed the ACESclip data directly into the ACES container? For example, Adobe Camera Raw (ACR) uses sidecar XMP files, but can also write the XMP data along with the EXIF data directly in the image header, creating a strong coupling between the metadata and the image container. In that regard, has XMP been considered? The standard is specifically built for "the creation, processing and interchange of standardized and custom metadata for digital documents and data sets." [Wik17] It could also be very advantageous to store DSLR camera metadata into the ACES container (e.g. for the Raw to ACES utility). Adobe is extensively using XMP for this purpose, and a large variety of DCC applications would be able to leverage this standard as well.
 
 \subsection{ACES OpenColorIO Configurations and ICC Profiles}
 The spread of ACES is partly tied to the success of the official ACES OpenColorIO (OCIO) configurations. While the ACES 1.0.3 configuration is in a good state overall, there are a few issues requiring improvement. Presently there is a visual mismatch between the 1.0.3 configuration and the CTL reference for high luminance saturated colors. Haarm-Pieter Duiker (2016) has suggested that a shaper LUT fit to the RRT would be an overall improvement over the generic log function currently used [DFW16].
@@ -186,7 +186,7 @@ Adoption of ACES by VFX vendors would also benefit from the Academy hosting the 
 \subsection{Digital Matte Painting \& Integer Based Applications}
 As shown in Kevin Wheatley (2016) [Whe16], integer based applications such as Adobe Photoshop, used extensively for Digital Matte Painting, exhibit some issues handling ACES encoded data. Improvements need to be made in order to accommodate their limitations.
 
-One such hypothetical enhancement would be a new space (or modification to an existing one) that would map log(0) to 0: ACEScct could have a minimum log value of 0 with a smooth curve up to the current ACEScct break point.
+One such hypothetical enhancement and starting point for further discussions, would be a new space (or modification to an existing one) that would map log(0) to 0: ACEScct could have a minimum log value of 0 with a smooth curve up to the current ACEScct break point.
 
 \section{Scope}
 Adoption of ACES has widened, reaching a broader range of applications such as video games, being integrated directly into realtime engines [Uni16][Epi16]. A consequence is that more people with their specific requirements and constraints are using the system. When electing to make their ACES implementation the default tonemapper in Unreal Engine [Epi17], Epic Games quickly became the leading driver of ACES adoption with millions of developers using the ACES system [Kev16].
@@ -215,7 +215,7 @@ In summary of the various requests, proposals and questions that were addressed 
 	\item A document on ODT creation akin to P-2013-001 [Amp15] will be written.
 	\item The CTL codebase and the official ACES OpenColorIO configurations, along with relevant documents, e.g. technical bulletins, will be stamped with DOIs.
 	\item The CTL codebase reference implementation will adopt a solid unit tests suite while checking the ACES OpenColorIO configuration state against it.
-	\item The Academy will promote a system for vetting and integrating IDTs with user feedback
+	\item The Academy will promote a system for vetting and integrating IDTs with user feedback.
 	\item The Academy website will be the host for best practice guides for usage of ACES and ACES OpencolorIO configurations within DCC applications.
 	\item The RRT will adopt a more neutral look and a faster parameterized mathematical implementation that will allow better control over the tonescale, thus contributing to spread of RRT usage and enabling true archival of creative intent.\footnote{It is important to note that while this point had the most diverging views among reviewers, it is seen as the most critical in the adoption of the system for those wishing for it, especially in contexts where an LMT component is not available.}
 	\item The RRT will be made fully invertible, and that the various sweeteners will be moved to a default LMT.
@@ -232,8 +232,6 @@ In summary of the various requests, proposals and questions that were addressed 
 
 \subsection{Final Words}
 The authors, contributors, reviewers, and members of the ACES community have tremendous respect for the Academy and hope that this document will be positively received and will help to shape the future of ACES.
-
-\newpage
 
 \section*{Appendix A\\ \small Parametric RRT}
 As an example, a Parametric RRT could use photographic input drawing on an extended version of ARRI AMIRA Video Look Parameters (VLP) [Arr14]:
@@ -267,18 +265,25 @@ The authors would like to thank Scott Dyer and Alex Forsythe for their continued
 	\renewcommand\
 	\makeatother
 
+\renewcommand\@biblabel[1]{[AmA17]}
+\bibitem{}
+The Academy of Motion Picture Arts and Sciences, Science and Technology Council, \& Academy Color Encoding System (ACES) Project Subcommittee. (n.d.). ACES. Retrieved March 9, 2017, from \url{http://www.oscars.org/science-technology/sci-tech-projects/aces} \vspace{2mm}
+
+\renewcommand\@biblabel[1]{[AmB17]}
+\bibitem{}
+The Academy of Motion Picture Arts and Sciences, Science and Technology Council, \& Academy Color Encoding System (ACES) Project Subcommittee. (n.d.). Academy Color Encoding System Developer Resources. Retrieved January 5, 2017, from \url{https://github.com/ampas/aces-dev} \vspace{2mm}
+
+\renewcommand\@biblabel[1]{[AmC17]}
+\bibitem{}
+The Academy of Motion Picture Arts and Sciences, Science and Technology Council, \& Academy Color Encoding System (ACES) Project Subcommittee. (n.d.). Reference Images. Retrieved January 5, 2017, from \url{https://github.com/ampas/aces-dev/tree/master/images} \vspace{2mm}
+
 \renewcommand\@biblabel[1]{[Amp14]}
 \bibitem{}
-\vspace*{\fill}
 The Academy of Motion Picture Arts and Sciences, Science and Technology Council, \& Academy Color Encoding System (ACES) Project Subcommittee. (2014). Technical Bulletin TB-2014-009 - Academy Color Encoding System (ACES) Clip-level Metadata File Format Definition and Usage, 1–14. \vspace{2mm}
 
 \renewcommand\@biblabel[1]{[Amp15]}
 \bibitem{}
-The Academy of Motion Picture Arts and Sciences, Science and Technology Council, \& Academy Color Encoding System (ACES) Project Subcommittee. (2015). Procedure P-2013-001 - Recommended Procedures for the Creation and Use of Digital Camera System Input Device Transforms (IDTs), 1–29. \vspace{2mm}
-
-\renewcommand\@biblabel[1]{[Amp17]}
-\bibitem{}
-The Academy of Motion Picture Arts and Sciences. (n.d.). Reference Images. Retrieved January 5, 2017, from \url{https://github.com/ampas/aces-dev/tree/master/images} \vspace{2mm}
+The Academy of Motion Picture Arts and Sciences, Science and Technology Council, \& Academy Color Encoding System (ACES) Project Subcommittee. (2015). Procedure P-2013-001 - Recommended Procedures for the Creation and Use of Digital Camera System Input Device Transforms (IDTs), 1–29.  \vspace{2mm}
 
 \renewcommand\@biblabel[1]{[AR06]}
 \bibitem{}
@@ -335,6 +340,8 @@ Hourdel, T., \& Lagarde, S. (2016). Private Discussion with Hourdel, T. and Laga
 \renewcommand\@biblabel[1]{[Har16]}
 \bibitem{}
 Hart, E. (2016). HDR for UE4. Retrieved December 20, 2016, from \url{https://github.com/ehartNV/UnrealEngine_HDR/blob/HDR_4.14/Integration_Guide.pdf} \vspace{2mm}
+
+\newpage
 
 \renewcommand\@biblabel[1]{[Hou16]}
 \bibitem{}
