@@ -29,7 +29,7 @@ Reviewers
 -   **Lucien Fostier**, *Image Engine Design*
 -   **Thomas Hourdel**, *Unity Technologies*
 -   **Jasmin Patry**, *Sucker Punch*
--   **JTroy James Sobotka**, *Freelancer*
+-   **Troy James Sobotka**, *Freelancer*
 
 About
 -----
