@@ -1,4 +1,3 @@
-
 \documentclass[conference]{IEEEtran}
 \usepackage{hyperref}
 
@@ -23,7 +22,6 @@
 \IEEEoverridecommandlockouts
 
 \begin{document}
-
 
 \title{ACES\\ \huge{Retrospective and Enhancements}}
 
@@ -70,8 +68,6 @@
 
 \IEEEpeerreviewmaketitle
 
-
-
 \section{Introduction}
 The Academy Color Encoding System (ACES) is a set of standardized, open source solutions created by the Academy of Motion Picture Arts and Sciences (AMPAS) Science and Technology Council (SciTech) for color management in the motion picture industry. It aims to simplify the complexity of multiple image capture devices, encoding standards, exhibition formats, and archival practices by providing the open standards for maintaining end-to-end image fidelity in a production workflow.
 
@@ -107,7 +103,7 @@ While ACES promises unified and controlled color management, some users might la
 
 With that intent, Haarm-Pieter Duiker (2016) has drafted a reference document [Dui16] describing ACES usage in various DCC applications, this provides an excellent basis and should be amended and extended to the latest state of the ACES components.
 \\ \\
-In summary, the greater community of ACES users and developers wishes to take greater part in the development and design of the ACES system. There are a number of deficiencies outlined above that prevent the effective integration of external resources into the ACES open-source initiative. Greater transparency, rigorous documentation, communication of intent, and detailed project management will greatly facilitate the growth, adoption, and rigor of the holistic ACES color management system across the industry.
+In summary, the greater community of ACES users and developers wishes to take larger part in the development and design of the ACES system. There are a number of deficiencies outlined above that prevent the effective integration of external resources into the ACES open-source initiative. Greater transparency, rigorous documentation, communication of intent, and detailed project management will greatly facilitate the growth, adoption, and rigor of the holistic ACES color management system across the industry.
 
 \section{Picture Rendering}
 
@@ -120,9 +116,7 @@ It is common for VFX vendors to adopt an ARRI K1S1 Photometric 3D LUT [Arr16] or
 
 Recent experience at Framestore and Eclair has seen projects where this has been the case. The LMT was used to both soften the base contrast and unbend the look imposed by the RRT. With this becoming routine practice, it has been more common to replace the RRT completely with an alternative. For example, outside of the ACES context, Dolby has been recommending to use a simple sigmoid function for HDR in place of the more traditional film emulation [Che16].
 
-Even outside of the motion picture industry, discussions with Unity Technologies have shown that the RRT contrast was deemed too high [HL16]. Electronic Arts recently implemented a modern post-processing chain drawing inspiration on ACES for the Frostbite engine but decided to not use ACES directly because the RRT was not deemed satisfactory with too much look and no proper handling of hue shifts in the shoulder region [Fry17]. A few real-time projects at Wingnut Films Production Ltd. were stripped of the RRT implementation shipping with Unreal Engine 4 for an alternative tone mapping function with a gentler effect on shadows. Digital skin rendering was also negatively affected by the strong highlight rolloff. The compressed highlight range impeded lookdev artists control over the specular response of digital skin. Additionally, it is regular practice for Video Game developers using ACES to fit the RRT + ODT with built-in exposure compensation to produce an average image luminance level consistent with their expectations [Hou16][KaA17] [Nar16].
-\\ \\
-All in all, there is large consensus within the computer graphics sectors that the default ACES RRT has too many unessential modifiers that hinder user's technical flexibility and creative intent.
+Even outside of the motion picture industry, discussions with Unity Technologies have shown that the RRT contrast was deemed too high [HL16]. Electronic Arts recently implemented a modern post-processing chain drawing inspiration on ACES for the Frostbite engine but decided to not use ACES directly because the RRT was not deemed satisfactory with too much look and no proper handling of hue shifts in the shoulder region [Fry17]. A few real-time projects at Wingnut Films Production Ltd. were stripped of the RRT implementation shipping with Unreal Engine 4 for an alternative tone mapping function with a gentler effect on shadows. Digital skin rendering was also negatively affected by the strong highlight rolloff. The compressed highlight range impeded lookdev artists control over the specular response of digital skin. Additionally, it is regular practice for Video Game developers using ACES to fit the RRT + ODT with built-in exposure compensation to produce an average image luminance level consistent with their expectations [Hou16][KaA17][Nar16].
 
 \subsection{Glow Module, Red Modifier, Global Desaturation and Invertibility}
 The RRT contains various unexplained code paths such as the Glow Module, the Red Modifier and the Global Desaturation, the former two were seemingly implemented to handle “electric reds” [Hou17]. Without documentation on their definite purpose, users must assume that they modify the RRT in an arguably subjective way. Ideally, adjustments and sweeteners of this type should be isolated and contained within a default ACES-defined LMT rather than integrated with the core RRT. This is especially crucial since it is critical that the core ACES tone rendering operations be fully invertible and neutral as possible to aid artistic manipulation of the base look.
@@ -130,6 +124,8 @@ The RRT contains various unexplained code paths such as the Glow Module, the Red
 In its present form, the Global Desaturation, and Red Modifier are not fully invertible, so consequently ACES 1.0 is only destructively invertible, which is problematic. It is common to apply the inverse view transform on logos, branding, and client or web reference output-referred images so that they are not affected once seen through the view transform. Invertibility is also necessary for artists using display-referred painting packages such as Adobe Photoshop as it is common to use an inverse view transform to "back convert display-referred imagery to a hypothetical scene-referred space” [Sel12][Lag17].
 
 Consequently, a perfect invertibility would also empower direct integration of VFX vendors current view transforms through the ACES system via LMT. It would be highly beneficial from both an archival standpoint, as VFX digital assets would be fully defined within the ACES system, and an adoption one as VFX vendors wouldn't have to surrender current pipelines in order to integrate with the ACES system.
+\\ \\
+All in all, there is large consensus within the computer graphics sectors that the default ACES RRT has too many unessential modifiers that hinder user's technical flexibility and creative intent.
 
 \subsection{Parametric Monotonic Mathematical Functions}
 While the final aesthetic rendering of the imagery should be the top priority, this look should be weighted against the computational overhead required to implement it. In this regard the various segmented splines used in the RRT and ODTs exhibit a significant amount of wobble with consequently non-smooth first derivatives [MaA16]. If the RRT and ODTs segmented splines could be modeled as an invertible continuous monotonic function with smoother derivatives the resultant faster execution would be consequential for real-time and other GPU accelerated applications. Presently, curve fitting on the various RRT and ODTs combinations is difficult because of the steep slopes [MaB16][HL16]. Most errors are occurring in the shadows for the SDR path and at both ends of the HDR path. Perhaps involving a greater number of viewers in the RRT and ODT authoring might have produced cleaner curves.
@@ -138,7 +134,7 @@ Given that it is challenging to satisfy everyone with a unique look, a Parametri
 
 Please refer to Appendix A: Parametric RRT for an example parameterization.
 
-Moreover, there is community interest in a Parametric ODT that would adapt to a wider range of displays and viewing conditions instead of the fixed ones currently implemented. It is particularly relevant for the new generation of HDR displays and HMDs. The HTC Vive has a peak luminance over 200 $cd/m^2$ which position it in between current SDR and HDR ODTs, and Epic Games has seen objectionable clipping while using the 1000 $cd/m^2$ HDR ODT with HDR OLED displays not capable of 1000 $cd/m^2$ [KaB17]. With parameterization in mind, Brian Hart (2016) has exposed controls over the underlying ODT's segmented spline for Unreal Engine 4 [Har16], while Epic Games is considering implementing controls for similar reasons [KaB17].
+Moreover, there is community interest in a Parametric ODT that would adapt to a wider range of displays and viewing conditions instead of the fixed ones currently implemented. It is particularly relevant for the new generation of HDR displays and HMDs. The HTC Vive has a peak luminance over 200 $cd/m^2$ which position it in between current SDR and HDR ODTs, and Epic Games has seen objectionable clipping while using the 1000 $cd/m^2$ HDR ODT with HDR OLED displays not capable of 1000 $cd/m^2$ [KaB17]. With parameterization in mind, Evan Hart (2016) has exposed controls over the underlying ODT's segmented spline for Unreal Engine 4 [Har16], while Epic Games is considering implementing controls for similar reasons [KaB17].
 
 Please refer to Appendix B: Parametric ODT for an example parameterization.
 
@@ -152,16 +148,16 @@ Additionally, narrow band light sources present issues in post-production and DI
 \section{DCC Applications Integration}
 
 \subsection{Metadata}
-Metadata describing the content and context of image data is a crucial piece of any color processing pipeline. ACESclip is designed with that purpose in mind, “to assist in configuring ACES viewing pipelines and to enable portability of ACES transforms in production.” [Amp14] The adoption of ACESclip has been very limited due largely to the file format not being widely advertised. However, without proper implementation of this standard there is no canonical way of knowing which ACES component versions were used on a given project. This deficiency breaks the canonical archival pipeline due to the authoring context being lost.
+Metadata describing the content and context of image data is a crucial piece of any color processing pipeline. ACESclip is designed with that purpose in mind, "to assist in configuring ACES viewing pipelines and to enable portability of ACES transforms in production." [Amp14] The adoption of ACESclip has been very limited due largely to the file format not being widely advertised. However, without proper implementation of this standard there is no canonical way of knowing which ACES component versions were used on a given project. This deficiency breaks the canonical archival pipeline due to the authoring context being lost.
 
-The ACESclip file format attempts to achieve many things at the same time which is likely another factor slowing down its adoption. Is it necessary to embed LUTs and ASC CDLs directly into the ACESclip file? If the intent is to avoid data loss, then the ACESclip file itself, being a sidecar, is subject to being lost too. Would it not be safer to embed the ACESclip data directly into the ACES container? For example, Adobe Camera Raw (ACR) uses sidecar XMP files, but can also write the XMP data along with the EXIF data directly in the image header, creating a strong coupling between the metadata and the image container. In that regard, has XMP been considered? The standard is specifically built for “the creation, processing and interchange of standardized and custom metadata for digital documents and data sets.” [Wik17] It could also be very advantageous to store DSLR camera metadata into the ACES container (e.g. for the Raw to ACES utility). Adobe is extensively using XMP for this purpose, and a large variety of DCC applications would be able to easily leverage this standard as well.
+The ACESclip file format attempts to achieve many things at the same time which is likely another factor slowing down its adoption. Is it necessary to embed LUTs and ASC CDLs directly into the ACESclip file? If the intent is to avoid data loss, then the ACESclip file itself, being a sidecar, is subject to being lost too. Would it not be safer to embed the ACESclip data directly into the ACES container? For example, Adobe Camera Raw (ACR) uses sidecar XMP files, but can also write the XMP data along with the EXIF data directly in the image header, creating a strong coupling between the metadata and the image container. In that regard, has XMP been considered? The standard is specifically built for "the creation, processing and interchange of standardized and custom metadata for digital documents and data sets." [Wik17] It could also be very advantageous to store DSLR camera metadata into the ACES container (e.g. for the Raw to ACES utility). Adobe is extensively using XMP for this purpose, and a large variety of DCC applications would be able to easily leverage this standard as well.
 
 \subsection{ACES OpenColorIO Configurations and ICC Profiles}
-The spread of ACES is partly tied to the success of the official ACES OpenColorIO (OCIO) configurations. While the ACES 1.0.3 configuration is in a good state overall, there are a few issues requiring improvement. Presently there is a visual mismatch between the 1.0.3 configuration and the CTL reference for high luminance saturated colors. Haarm-Pieter Duiker (2016) has suggested that a shaper LUT better fit to the RRT would be an overall improvement over the generic log function currently used [DFW16].
+The spread of ACES is partly tied to the success of the official ACES OpenColorIO (OCIO) configurations. While the ACES 1.0.3 configuration is in a good state overall, there are a few issues requiring improvement. Presently there is a visual mismatch between the 1.0.3 configuration and the CTL reference for high luminance saturated colors. Haarm-Pieter Duiker (2016) has suggested that a shaper LUT fit to the RRT would be an overall improvement over the generic log function currently used [DFW16].
 
-In addition to direct OCIO library support, the configuration includes LUTs built for various applications that don’t offer native OCIO support, including ICC profiles for use with Adobe Photoshop. The current ICC profiles are authored to handle ACEcc, ACESproxy or ACEScct colorspaces, but it would be useful also to have profiles covering ACEScg and ACES2065-1 linear colorspaces as well. However, the profiles may exhibit some clipping with image data using the full AP1 or AP0 gamuts because of the CIE Lab Profile Connection Space (PCS) specified by ICC for compliant implementations being bounded: [0, 100] for L, and [-128, +128] for a and b. Furthermore, the profiles being clamped to ACES diffuse white are SDR, and thus do not support any HDR content or HDR displays. Lars Borg (2017) suggested that using constrained CIE XYZ PCS would yield two times the headroom or using the profiles in non-constrained mode, extrapolating into HDR space [Bor17].
+In addition to direct OCIO library support, the configuration includes LUTs built for various applications that don’t offer native OCIO support, including ICC profiles for use with Adobe Photoshop. The current ICC profiles are authored to handle ACEScc, ACESproxy or ACEScct colorspaces, but it would be useful to have profiles covering ACEScg and ACES2065-1 linear colorspaces as well. However, those profiles may exhibit some clipping with image data using the full AP1 or AP0 gamuts because of the CIE Lab Profile Connection Space (PCS) specified by ICC for compliant implementations being bounded: [0, 100] for L, and [-128, +128] for a and b. Furthermore, the profiles being clamped to ACES diffuse white are SDR, and thus do not support any HDR content or HDR displays. Lars Borg (2017) suggested that using constrained CIE XYZ PCS would yield two times the headroom or using the profiles in non-constrained mode, extrapolating into HDR space [Bor17].
 
-The official ACES OCIO configurations are hosted by Sony Pictures Imageworks on Github with multiple forks being used to feed the main repository. This organization is inconvenient for various reasons, most notably when it comes to tracking down where current work is happening [Jon17]. This raises the question of whether the Academy should take the repository under its wing, or make their fork the official entry point for pull requests toward the Sony Pictures Imageworks repository?
+The official ACES OCIO configurations are hosted by Sony Pictures Imageworks on Github with multiple forks being used to feed the main repository. This organization is inconvenient for various reasons, most notably when it comes to tracking down where current work is happening [Jon17]. This raises the question of whether the Academy should take the repository under its wing, or make their fork the official entry point for pull requests toward the Sony Pictures Imageworks repository.
 
 This dependency structure further raises the questions on the status of the development of the ACES OpenColorIO configurations relative to the core ACES repository. The 1.0.1 configuration was developed as part of the ACES 1.0.1 release, but the 1.0.2 and 1.0.3 were created somewhat independently. Given the configuration's role in enabling the use of ACES, it should be more directly developed and supported by the Academy team, and released alongside updates to the master branch.
 
@@ -240,7 +236,7 @@ CTL does not support unit testing at the moment thus a unit tests framework coul
 The implementation would use ctlrender to output a set of test images compared to a set of existing reference images since this is the only way CTL can perform values IO at the moment. For ease of use, the unit tests suite should be depending on a minimal set of Python packages and ideally run from a single call to nosetests.
 
 Continuous integration being a major contributing factor for Open Source Software development might be supported through Travis-CI [Trav17], it would ensure that the unit tests are being run every time a contributor is pushing his commits to his upstream clone of the repository.
-\\ \\
+
 A proposal implementation is being worked on and available on Github for discussion [Man17].
 
 \section*{Acknowledgment}
@@ -252,7 +248,6 @@ The authors would like to thank Lars Borg\footnote{Adobe}, Alasdair Coull\footno
 	\makeatletter
 	\renewcommand\
 	\makeatother
-
 
 \renewcommand\@biblabel[1]{[Amp14]}
 \bibitem{}
