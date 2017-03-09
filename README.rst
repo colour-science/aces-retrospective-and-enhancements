@@ -19,11 +19,14 @@ Introduction
 ------------
 
 This repository contains the LaTeX source code for the
-**ACES - Retrospective and Enhancements** document being addressed to the
+**ACES - Retrospective and Enhancements** document addressed to the
 Academy of Motion Picture Arts and Sciences (AMPAS) Science and
 Technology Council (SciTech).
 
 The original open and collaborative document is available on `Google Docs <https://goo.gl/F71kvV>`_
+
+Content
+-------
 
 The Academy Color Encoding System (ACES) is a set of standardized, open source solutions created by the Academy of Motion Picture Arts and Sciences (AMPAS) Science and Technology Council (SciTech) for color management in the motion picture industry. It aims to simplify the complexity of multiple image capture devices, encoding standards, exhibition formats, and archival practices by providing the open standards for maintaining end-to-end image fidelity in a production workflow.
 
