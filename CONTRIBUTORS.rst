@@ -37,5 +37,5 @@ About
 -----
 
 | **ACES - Retrospective and Enhancements** - 2016-2017
-| Copyright © 2013-2017 - ACES - Retrospective and Enhancements Authors
+| Copyright © 2016-2017 - ACES - Retrospective and Enhancements Authors
 | This document is released under terms of Creative Commons Attribution-NonCommercial-NoDerivs 2.5 Generic License: http://creativecommons.org/licenses/by-nc-nd/2.5/
