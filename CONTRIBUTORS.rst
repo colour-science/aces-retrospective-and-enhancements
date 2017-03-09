@@ -27,6 +27,7 @@ Reviewers
 -   **Alasdair Coull**, *Wingnut Films Production Ltd.*
 -   **Marie Fetiveau**, *Rodeo FX*
 -   **Lucien Fostier**, *Image Engine Design*
+-   **Alex Fry**, *Electronic Arts*
 -   **Thomas Hourdel**, *Unity Technologies*
 -   **Anders Langlands**, *Weta Digital*
 -   **Jasmin Patry**, *Sucker Punch*
