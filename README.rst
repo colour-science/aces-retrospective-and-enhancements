@@ -10,7 +10,7 @@ ACES - Retrospective and Enhancements
       - |zenodo|
 
 .. |zenodo| image:: https://zenodo.org/badge/doi/10.5281/zenodo.345624.png
-    :target: http://dx.doi.org/10.5281/zenodo.345624
+    :target: https://doi.org/10.5281/zenodo.345624
     :alt: DOI
 
 .. end-badges
